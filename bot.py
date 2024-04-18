@@ -34,6 +34,7 @@ async def command_start_handler(message: Message) -> None:
 
 
 def validate_user_input(user_input: Dict[str, str]) -> bool:
+    """Валидация ввода на необходимые ключи."""
     if not all(
         key in ['dt_from', 'dt_upto', 'group_type'] for key in user_input
     ):
@@ -41,6 +42,7 @@ def validate_user_input(user_input: Dict[str, str]) -> bool:
 
 
 def validate_date_string(date: str) -> datetime:
+    """Валидация ISO таймстампа."""
     try:
         return datetime.fromisoformat(date)
     except Exception:
@@ -48,6 +50,7 @@ def validate_date_string(date: str) -> datetime:
 
 
 def validate_group_type(group_type: str) -> str:
+    """Валидация идентификатора группировки."""
     if group_type in ['hour', 'day', 'month', 'year']:
         return group_type
     else:
@@ -57,11 +60,13 @@ def validate_group_type(group_type: str) -> str:
 
 
 def validate_timeframe(dt_from: datetime, dt_upto: datetime) -> None:
+    """Валидация времени начала и конца периода."""
     if dt_from >= dt_upto:
         raise Exception('"dt_from" должно быть меньше "dt_upto"')
 
 
 def read_user_input(text: str) -> Tuple[datetime, datetime, str]:
+    """Парсинг введенных данных."""
     try:
         user_input = json.loads(text)
     except Exception:
@@ -79,6 +84,7 @@ def read_user_input(text: str) -> Tuple[datetime, datetime, str]:
 async def form_report(
         dt_from: datetime, dt_upto: datetime, group_type: str
 ) -> Any:
+    """Запрос к базе данных."""
 
     pipeline = [
         {
@@ -138,6 +144,7 @@ async def form_report(
 
 @dp.message()
 async def command_aggregate_data(message: Message) -> None:
+    """Ответ на сообщение с запросом."""
     try:
         dt_from, dt_upto, group_type = read_user_input(message.text)
         await message.answer(await form_report(
