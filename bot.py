@@ -11,6 +11,7 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
 from aiogram.types import Message
+from aiogram.utils.token import TokenValidationError
 from dotenv import load_dotenv
 from motor import motor_asyncio
 
@@ -161,10 +162,14 @@ async def command_aggregate_data(message: Message) -> None:
 
 
 async def main() -> None:
-    bot = Bot(
-        token=TOKEN,
-        default=DefaultBotProperties(parse_mode=ParseMode.HTML)
-    )
+    try:
+        bot = Bot(
+            token=TOKEN,
+            default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+        )
+    except TokenValidationError:
+        logging.critical('Токен отсутствует или неверный.')
+        sys.exit(1)
     await dp.start_polling(bot)
 
 
