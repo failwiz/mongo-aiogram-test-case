@@ -1,5 +1,5 @@
 import asyncio
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 import logging
 from os import getenv
@@ -102,7 +102,7 @@ async def form_report(
                 "range": {
                     "step": 1,
                     "unit": group_type,
-                    "bounds": [dt_from, dt_upto]
+                    "bounds": [dt_from, dt_upto+timedelta(seconds=1)]
                 }
             }
         },
