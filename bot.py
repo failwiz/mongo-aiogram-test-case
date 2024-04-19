@@ -140,7 +140,7 @@ async def form_report(
         "dataset": [row['sum'] for row in result],
         "labels": [row['_id'] for row in result]
     }
-    return json.dumps(report, indent=True)
+    return json.dumps(report)
 
 
 @dp.message()
